@@ -1,0 +1,72 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "gym-calculation"
+description = ''
+readme = "README.md"
+requires-python = ">=3.7"
+license = "MIT"
+keywords = []
+authors = [
+  { name = "Sara Johansson", email = "sarajohanssoon@proton.me" },
+]
+classifiers = [
+  "Development Status :: 4 - Beta",
+  "Programming Language :: Python",
+  "Programming Language :: Python :: 3.7",
+  "Programming Language :: Python :: 3.8",
+  "Programming Language :: Python :: 3.9",
+  "Programming Language :: Python :: 3.10",
+  "Programming Language :: Python :: 3.11",
+  "Programming Language :: Python :: Implementation :: CPython",
+  "Programming Language :: Python :: Implementation :: PyPy",
+]
+dependencies = [
+  "pandas",
+  "numpy"
+]
+dynamic = ["version"]
+
+[project.urls]
+Documentation = "https://github.com/unknown/gym-calculation#readme"
+Issues = "https://github.com/unknown/gym-calculation/issues"
+Source = "https://github.com/unknown/gym-calculation"
+
+[tool.hatch.version]
+path = "gym_calculation/__about__.py"
+
+[tool.hatch.envs.default]
+dependencies = [
+  "pylint",
+  "mypy",
+  "flake8",
+  "flake8-pyproject",
+  "pytest",
+  "pytest-cov",
+]
+
+[tool.hatch.envs.default.scripts]
+cov = "pytest --cov-report=term-missing --cov-config=pyproject.toml --cov=gym_calculation --cov=tests {args}"
+no-cov = "cov --no-cov {args}"
+lint = "pylint gym_calculation/*.py"
+style = "flake8 gym_calculation/*.py"
+types = "mypy gym_calculation/*.py"
+
+[[tool.hatch.envs.test.matrix]]
+python = ["37", "38", "39", "310", "311"]
+
+[tool.coverage.run]
+branch = true
+parallel = true
+omit = [
+  "gym_calculation/__about__.py",
+]
+
+[tool.coverage.report]
+exclude_lines = [
+  "no cov",
+  "if __name__ == .__main__.:",
+  "if TYPE_CHECKING:",
+]
