@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "gym-calculation"
-description = ''
+description = 'Test repo'
 readme = "README.md"
 requires-python = ">=3.7"
 license = "MIT"
@@ -30,9 +30,9 @@ dependencies = [
 dynamic = ["version"]
 
 [project.urls]
-Documentation = "https://github.com/unknown/gym-calculation#readme"
-Issues = "https://github.com/unknown/gym-calculation/issues"
-Source = "https://github.com/unknown/gym-calculation"
+Documentation = "https://github.com/sarastatistik/gym-calculation#readme"
+Issues = "https://github.com/sarastatistik/gym-calculation/issues"
+Source = "https://github.com/sarastatistik/gym_calculation"
 
 [tool.hatch.version]
 path = "gym_calculation/__about__.py"

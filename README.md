@@ -1,7 +1,6 @@
 # gym calculation
 
-[![PyPI - Version](https://img.shields.io/pypi/v/gym-calculation.svg)](https://pypi.org/project/gym-calculation)
-[![PyPI - Python Version](https://img.shields.io/pypi/pyversions/gym-calculation.svg)](https://pypi.org/project/gym-calculation)
+Just a test repo to get started
 
 -----
 
@@ -13,7 +12,7 @@
 ## Installation
 
 ```console
-pip install gym-calculation
+...
 ```
 
 ## License

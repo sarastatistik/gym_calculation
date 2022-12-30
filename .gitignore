@@ -1,2 +1,4 @@
 .vscode/settings.json
 /dist
+*.csv
+gym_calculation/create_example_data.py
