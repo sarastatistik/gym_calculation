@@ -9,8 +9,8 @@ class GymSchedule:
     def __init__(self,
                  main_set_reps: Optional[int] = None,
                  accessory_set_reps: Optional[int] = None,
-                 accessory_lifts: Optional[Dict[str]] = None,
-                 prehab_lifts: Optional[Dict[str]] = None) -> None:
+                 accessory_lifts: Optional[Dict[str, str]] = None,
+                 prehab_lifts: Optional[Dict[str, str]] = None) -> None:
 
         self.main_lifts = ["squats", "bench", "deadlift"]
 
