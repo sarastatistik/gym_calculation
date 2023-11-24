@@ -25,7 +25,9 @@ classifiers = [
 ]
 dependencies = [
   "pandas",
-  "numpy"
+  "numpy",
+  "shiny",
+  "shinyswatch"
 ]
 dynamic = ["version"]
 

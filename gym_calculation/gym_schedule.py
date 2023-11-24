@@ -9,6 +9,7 @@ class GymSchedule:
     def __init__(self,
                  main_set_reps: Optional[int] = None,
                  accessory_set_reps: Optional[int] = None,
+                 prehab_set_reps: int = 6,
                  accessory_lifts: Optional[Dict[str, str]] = None,
                  prehab_lifts: Optional[Dict[str, str]] = None) -> None:
 
@@ -45,10 +46,10 @@ class GymSchedule:
             warmup_sets=0,
             working_sets=3,
             ending_reps=0,
-            max_reps=6,
+            max_reps=prehab_set_reps,
             starting_with_bar=False
         )
-        
+
     @staticmethod
     def generate_sets(warmup_sets: int,
                       working_sets: int,
@@ -80,36 +81,11 @@ class GymSchedule:
         return [self._generate_session(m) for m in self.main_lifts]
 
 
-
-
-
-self = GymSchedule(main_set_reps=8, accessory_set_reps=6)
-self.generate_sessions()
-
-
-# one: accumulation
-# two: intensification
-# three: peaking
-# four: deloading
-
-week_one = GymSchedule(main_set_reps=8, accessory_set_reps=6)
-week_two = GymSchedule(main_set_reps=5, accessory_set_reps=4)
-week_three = GymSchedule(main_set_reps=2, accessory_set_reps=1)
-
-
-
-
-
-
-
-
 class DeloadSchedule(GymSchedule):
 
     def __init__(self,
-                 prehab_lifts: Optional[Dict[str]] = None) -> None:
-        super().__init__(prehab_lifts=prehab_lifts)
-
-        self.sets_main
+                 prehab_set_reps: int = 8) -> None:
+        super().__init__(prehab_set_reps=prehab_set_reps)
 
     def full_body_session(self):
         # 2 sets of 5 reps at 50-60% of 1RM
@@ -122,47 +98,58 @@ class DeloadSchedule(GymSchedule):
         for m in self.main_lifts:
             for s in sets:
                 session.append((m, s))
-
-pd.DataFrame(session, columns=["lift", "setup"])
-
-
-
-#2 sets of 5 reps at 50-60% of 1RM
-self = DeloadSchedule()
-
-
-
-    def full_body_session(self):
-        cols = ["lift", "setup"]
-        sets = GymSchedule.generate_sets(
-            warmup_sets=0,
-            working_sets=2,
-            ending_reps=5,
-            max_reps=5)
-        sets = [("squats", s) for s in sets] + [("deadlift", s) for s in sets] + [("bench", s) for s in sets]
-        sets = pd.DataFrame(sets, columns=cols)
-
-        sets_prehab = GymSchedule.generate_sets(
-            warmup_sets=0,
-            working_sets=3,
-            ending_reps=0,
-            max_reps=4)
-        pre = [pd.DataFrame([(i, j) for j in sets_prehab], columns=cols) for i in self.prehab_lifts]
-        session = pd.concat([sets] + pre)
-        return session
+        for p in self.prehab_lifts.values():
+            session.append((p, self.sets_prehab))
+        return pd.DataFrame(session, columns=["lift", "setup"])
+    
+    def _prehab_session(self, exercises: List[str]) -> pd.DataFrame:
+        session = [(e, self.sets_prehab) for e in exercises]
+        return pd.DataFrame(session, columns=["lift", "setup"])
 
     def upper_body_session(self):
-        pass
+        exercises = [
+            "Jefferson Curls",
+            "Side Lateral Shoulder Raises",
+            "Triceps Pushdowns",
+            "Lat Pulldowns",
+            "Rows",
+            "Machine Reverse Fly",
+            "Bicep curls",
+        ]
+        return self._prehab_session(exercises)
 
-    def active_recovery_cardio(self):
-        pass
+    def lower_body_session(self):
+        exercises = [
+            "Deadbugs",
+            "Fire Hydrant",
+            "Bridges",
+            "Single Leg Bridge",
+            "Bird Dog",
+            "Kickbacks",
+            "Leg Extension",
+        ]
+        return self._prehab_session(exercises)
+   
 
-    def active_recovery_mobility(self):
-        pass
+# one: accumulation
+# two: intensification
+# three: peaking
+# four: deloading
 
 
 
-self = WeekFourDeload()
+class MonthlySchedule:
+
+    def __init__(self) -> None:
+        self.week_one = GymSchedule(main_set_reps=8, accessory_set_reps=6)
+        self.week_two = GymSchedule(main_set_reps=5, accessory_set_reps=4)
+        self.week_three = GymSchedule(main_set_reps=2, accessory_set_reps=1)
+        self.week_four = DeloadSchedule(prehab_set_reps=8)
+
+
+self = MonthlySchedule()
+
+
 
 
 
