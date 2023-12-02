@@ -1,6 +1,6 @@
 # gym calculation
 
-Just a test repo to get started
+My own personal Shiny application for keeping track of my workout schedule. 
 
 -----
 

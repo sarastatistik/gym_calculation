@@ -5,18 +5,17 @@ import shinyswatch
 
 import pandas as pd
 
-from gym_schedule import MonthlySchedule, WeightCalc
-
-
-gym = MonthlySchedule("gym_calculation/exercises_acc.json",
-                       "gym_calculation/exercises_prehab.json",
-                       weight_calc=WeightCalc(70, 47.5, 102.5))
+from gym_schedule import MonthlySchedule
 
 
 
+gym = MonthlySchedule("gym_calculation/params/weight_manager.json",
+                      "gym_calculation/params/exercises_acc.json",
+                      "gym_calculation/params/exercises_prehab.json",
+                      [70, 47.5, 102.5])
 
-css_path = "style.css"
 
+css_path = "gym_calculation/style.css"
 
 
 phases = {

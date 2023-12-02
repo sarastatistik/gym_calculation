@@ -27,7 +27,8 @@ dependencies = [
   "pandas",
   "numpy",
   "shiny",
-  "shinyswatch"
+  "shinyswatch",
+  "pydantic"
 ]
 dynamic = ["version"]
 
