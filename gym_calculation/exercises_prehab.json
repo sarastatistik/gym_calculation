@@ -1,0 +1,38 @@
+{
+    "squats" : [
+        "Glute Bridges (variations)",
+        "Dynamic Pigeon Poses",
+        "Walking Lunges with weight",
+        "Clamshells",
+        "Leg Swings",
+        "Calf Raises",
+        "Jefferson Curls",
+        "Deadbugs",
+        "Hip exercises (variations)",
+        "Internal Hip Rotation exercise",
+        "External Hip Rotation exercise"
+    ],
+    "bench" : [
+        "Prone YTI Raises",
+        "Band Pull-Aparts",
+        "Reverse Prayer Hands",
+        "Scapular Retraction",
+        "Shoulder Dislocations",
+        "Shoulder External Rotation",
+        "Planks",
+        "YTWL Exercise"
+    ],
+    "deadlift" : [
+        "Jefferson Curls",
+        "Deadbugs",
+        "Bird Dogs",
+        "Band Pull-Aparts",
+        "Glute Bridges (variations)",
+        "Walking Lunges with weight",
+        "Reverse Prayer Hands",
+        "Prone YTI Raises",
+        "Scapular Retraction",
+        "Shoulder Dislocations",
+        "Planks"
+    ]
+}

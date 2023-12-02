@@ -1,0 +1,26 @@
+{
+    "squats" : [
+        "Pause Squats",
+        "Platz Squats",
+        "Front Squats",
+        "Kickbacks",
+        "Goblet Squats",
+        "Leg Press"
+    ],
+    "bench" : [
+        "Overhead Press",
+        "Dumbbell Press",
+        "Close-Grip Bench Press",
+        "Face Pulls",
+        "Skull Crushers"
+    ],
+    "deadlift" : [
+        "Bent-Over Rows",
+        "Seated Cable Rows",
+        "Good Mornings",
+        "Farmers Walks",
+        "Seated Good Mornings",
+        "Romanian Deadlifts",
+        "Lat Pulldowns"
+    ]
+}
