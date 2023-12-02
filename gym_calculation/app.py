@@ -1,12 +1,20 @@
-from pathlib import Path
+from typing import Dict, List
 
+import pandas as pd
+from pydantic import BaseModel
 from shiny import App, render, ui, reactive
 import shinyswatch
 
-import pandas as pd
 
-from gym_schedule import MonthlySchedule
+from create_schedule import MonthlySchedule
 
+
+
+class AppHelper(BaseModel):
+    gym_schedule: MonthlySchedule
+    css_path: str
+    headers_week: Dict[int, List[str]]
+    headers_session: Dict[int, List[str]]
 
 
 gym = MonthlySchedule("gym_calculation/params/weight_manager.json",
@@ -15,7 +23,7 @@ gym = MonthlySchedule("gym_calculation/params/weight_manager.json",
                       [70, 47.5, 102.5])
 
 
-css_path = "gym_calculation/style.css"
+css_path = "gym_calculation/params/style.css"
 
 
 phases = {
@@ -32,9 +40,6 @@ headers = {
     "Week 3": gym.headers_main,
     "Week 4": gym.headers_deload
 }
-
-
-lifts = {0: "squats", 1: "bench", 2: "deadlift"}
 
 
 week123 = ui.row(
