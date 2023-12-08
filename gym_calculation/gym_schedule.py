@@ -14,6 +14,12 @@ class GymSchedule:
 
         self.main_lifts = ["squats", "bench", "deadlift"]
 
+        self.secondary_lifts = {
+            "squats": "deadlift",
+            "bench": "squats",
+            "deadlift": "bench",
+        }
+
         if main_set_reps is not None:
             self.sets_main = GymSchedule.generate_sets(
                 warmup_sets=4,
@@ -25,9 +31,9 @@ class GymSchedule:
 
         if accessory_set_reps is not None:
             self.sets_accessory = GymSchedule.generate_sets(
-                warmup_sets=3,
+                warmup_sets=2,
                 working_sets=3,
-                ending_reps=2,
+                ending_reps=1,
                 max_reps=accessory_set_reps)
         else:
             self.sets_accessory = None
@@ -53,12 +59,16 @@ class GymSchedule:
         sets = [(main_lift, i) for i in self.sets_main]
         return pd.DataFrame(sets, columns=["lift", "setup"])
 
+    def generate_secondary(self, main_lift: str) -> pd.DataFrame:
+        lift = self.secondary_lifts[main_lift]
+        sets = [(lift, i) for i in self.sets_accessory]
+        return pd.DataFrame(sets, columns=["lift", "setup"])
+
     def generate_acc(self, main_lift: str):
-        acc = [k for k in self.main_lifts if k != main_lift]
+        acc = [k for k in self.main_lifts if k not in [self.secondary_lifts[main_lift], main_lift]][0]
         sets = []
-        for i in acc:
-            for j in self.sets_accessory:
-                sets.append((i, j))
+        for i in self.sets_accessory:
+            sets.append((acc, i))
         return pd.DataFrame(sets, columns=["lift", "setup"])
 
 

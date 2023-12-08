@@ -10,35 +10,41 @@ from create_schedule import MonthlySchedule
 
 
 
-class AppHelper(BaseModel):
-    gym_schedule: MonthlySchedule
-    css_path: str
-    headers_week: Dict[int, List[str]]
-    headers_session: Dict[int, List[str]]
-
-
 gym = MonthlySchedule("gym_calculation/params/weight_manager.json",
                       "gym_calculation/params/exercises_acc.json",
                       "gym_calculation/params/exercises_prehab.json",
                       [70, 47.5, 102.5])
 
 
-css_path = "gym_calculation/params/style.css"
+class AppHelper(BaseModel):
+    css_path: str
+    id2week: Dict[int, str]
+    headers_week: Dict[int, str]
+    headers_sessions: Dict[int, str]
+    headers_deload: Dict[int, str]
 
 
-phases = {
-    "Week 1": (f"Week 1: Accumulation ({gym.prc[0]})", gym.main_week_one, gym.acc_week_one),
-    "Week 2": (f"Week 2: Intensification ({gym.prc[1]})", gym.main_week_two, gym.acc_week_two),
-    "Week 3": (f"Week 3: Peaking ({gym.prc[2]})", gym.main_week_three, gym.acc_week_three),
-    "Week 4": (f"Week 4: Deload ({gym.prc[3]})", gym.sessions_week_four)
+a = {
+    "css_path": "gym_calculation/params/style.css",
+    "id2week": {0: "Week 1", 1: "Week 2", 2: "Week 3", 3: "Week 4"},
+    "headers_week": {0: "Week 1: Accumulation", 1: "Week 2: Intensification", 2: "Week 3: Peaking", 3: "Week 4: Deload"},
+    "headers_sessions": {0: "Squats session", 1: "Bench session", 2: "Deadlift session"},
+    "headers_deload": {0: "Full body session", 1: "Upper body session", 2: "Lower Body Session"},
 }
 
 
-headers = {
-    "Week 1": gym.headers_main,
-    "Week 2": gym.headers_main,
-    "Week 3": gym.headers_main,
-    "Week 4": gym.headers_deload
+app_helper = AppHelper(**a)
+
+week2id = {k: v for k, v in zip(app_helper.id2week.values(), app_helper.id2week.keys())}
+
+
+
+
+phases = {
+    "Week 1": (gym.main_week_one, gym.acc_week_one, gym.secondary_week_one),
+    "Week 2": (gym.main_week_two, gym.acc_week_two, gym.secondary_week_two),
+    "Week 3": (gym.main_week_three, gym.acc_week_three, gym.secondary_week_three),
+    "Week 4": (gym.sessions_week_four)
 }
 
 
@@ -95,7 +101,7 @@ week4 = ui.row(
 
 app_ui = ui.page_fluid(
     shinyswatch.theme.minty(),
-    ui.include_css(css_path),
+    ui.include_css(app_helper.css_path),
     ui.markdown("<br>"),
     ui.row(
         ui.column(
@@ -116,8 +122,8 @@ app_ui = ui.page_fluid(
             ui.h5("Select the current phase:"),
             ui.input_select("gym_phase",
                             "",
-                            list(phases.keys()),
-                            selected="Week 1"),
+                            list(app_helper.id2week.values()),
+                            selected=app_helper.id2week[0]),
             ui.input_action_button("btn_acc", "Change accessory lifts", class_="btn-primary"),
             ui.input_action_button("btn_pre", "Change prehab exercises", class_="btn-primary"),             
             ui.markdown("<br>"),
@@ -159,27 +165,40 @@ def server(input, output, session):
     @output
     @render.text
     def phase():
-        return phases[input.gym_phase()][0]
+        return app_helper.headers_week[week2id[input.gym_phase()]]
 
     @output
     @render.text
     def session_header1():
-        return headers[input.gym_phase()][0]
+        if input.gym_phase() == app_helper.id2week[3]:
+            return app_helper.headers_deload[0]
+        else:
+            return app_helper.headers_sessions[0]
 
     @output
     @render.text
     def session_header2():
-        return headers[input.gym_phase()][1]
+        if input.gym_phase() == app_helper.id2week[3]:
+            return app_helper.headers_deload[1]
+        else:
+            return app_helper.headers_sessions[1]
 
     @output
     @render.text
     def session_header3():
-        return headers[input.gym_phase()][2]
+        if input.gym_phase() == app_helper.id2week[3]:
+            return app_helper.headers_deload[2]
+        else:
+            return app_helper.headers_sessions[2]
 
     @output
     @render.table
     def main1():
-        df = phases[input.gym_phase()][1]()[0]
+        if input.gym_phase() != "Week 4":
+            df = phases[input.gym_phase()][0]()[0]
+        else:
+            print(phases[input.gym_phase()]())
+            df = phases[input.gym_phase()]()[0]
         return (df.style
                 .set_table_attributes('class="dataframe table shiny-table w-auto"')
                 .hide(axis="index")
@@ -188,7 +207,11 @@ def server(input, output, session):
     @output
     @render.table
     def main2():
-        df = phases[input.gym_phase()][1]()[1]
+        if input.gym_phase() != "Week 4":
+            df = phases[input.gym_phase()][0]()[1]
+        else:
+            print(phases[input.gym_phase()]())
+            df = phases[input.gym_phase()]()[1]
         return (df.style
                 .set_table_attributes('class="dataframe table shiny-table w-auto"')
                 .hide(axis="index")
@@ -197,7 +220,11 @@ def server(input, output, session):
     @output
     @render.table
     def main3():
-        df = phases[input.gym_phase()][1]()[2]
+        if input.gym_phase() != "Week 4":
+            df = phases[input.gym_phase()][0]()[2]
+        else:
+            print(phases[input.gym_phase()]())
+            df = phases[input.gym_phase()]()[2]
         return (df.style
                 .set_table_attributes('class="dataframe table shiny-table w-auto"')
                 .hide(axis="index")
@@ -206,9 +233,9 @@ def server(input, output, session):
     @render.table
     def acc1():
         if input.gym_phase() != "Week 4":
-            df = phases[input.gym_phase()][2]()[0]
+            df = phases[input.gym_phase()][1]()[0]
             df.loc[df["lift"] == "bench", "lift"] = acc_bench()
-            df.loc[df["lift"] == "deadlift", "lift"] = acc_deadlift()
+            df = pd.concat([phases[input.gym_phase()][2]()[0], df])
             return (df.style
                     .set_table_attributes('class="dataframe table shiny-table w-auto"')
                     .hide(axis="index")
@@ -218,9 +245,9 @@ def server(input, output, session):
     @render.table
     def acc2():
         if input.gym_phase() != "Week 4":
-            df = phases[input.gym_phase()][2]()[1]
-            df.loc[df["lift"] == "squats", "lift"] = acc_squats()
+            df = phases[input.gym_phase()][1]()[1]
             df.loc[df["lift"] == "deadlift", "lift"] = acc_deadlift()
+            df = pd.concat([phases[input.gym_phase()][2]()[1], df])
             return (df.style
                     .set_table_attributes('class="dataframe table shiny-table w-auto"')
                     .hide(axis="index")
@@ -230,14 +257,14 @@ def server(input, output, session):
     @render.table
     def acc3():
         if input.gym_phase() != "Week 4":
-            df = phases[input.gym_phase()][2]()[2]
-            df.loc[df["lift"] == "bench", "lift"] = acc_bench()
+            df = phases[input.gym_phase()][1]()[2]
             df.loc[df["lift"] == "squats", "lift"] = acc_squats()
+            df = pd.concat([phases[input.gym_phase()][2]()[2], df])
             return (df.style
                     .set_table_attributes('class="dataframe table shiny-table w-auto"')
                     .hide(axis="index")
                     .hide(axis="columns"))
-        
+
     @output
     @render.table
     def pre1():

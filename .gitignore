@@ -1,5 +1,5 @@
-.vscode/settings.json
-/dist
+.vscode/
+dist/
 *.csv
-gym_calculation/create_example_data.py
 *__pycache__*
+env/

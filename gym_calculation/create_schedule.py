@@ -25,9 +25,6 @@ class ExerciseBucket(BaseModel):
 class MonthlySchedule:
 
     def __init__(self, weight_manager:str, accessory: str, prehab: str, weights: List[Union[int, float]]) -> None:
-
-        # TODO: Lägg till i weight manager istället så det blir rätt
-        self.prc = ["70%", "80%", "90%", "55%"]
         
         self.headers_main = ["Squats session", "Bench session", "Deadlift session"]
         self.headers_deload = ["Full body session", "Upper body session", "Lower Body Session"]
@@ -68,6 +65,10 @@ class MonthlySchedule:
             x["weight"] = [i + "kg" for i in x["weight"]]
         return [MonthlySchedule.rename_main_lifts(df) for df in d]
 
+    def secondary_week_one(self):
+        d = [self.accumulation.generate_secondary(m) for m in self.accumulation.main_lifts]
+        return [MonthlySchedule.rename_main_lifts(df) for df in d]
+
     def main_week_two(self):
         d = [self.intensification.generate_main(m) for m in self.intensification.main_lifts]
         w = [self.weight_calc.get_weights(lift)[1] for lift in ["squats", "bench", "deadlift"]]
@@ -77,6 +78,10 @@ class MonthlySchedule:
             x["weight"] = [i + "kg" for i in x["weight"]]
         return [MonthlySchedule.rename_main_lifts(df) for df in d]
 
+    def secondary_week_two(self):
+        d = [self.intensification.generate_secondary(m) for m in self.intensification.main_lifts]
+        return [MonthlySchedule.rename_main_lifts(df) for df in d]
+
     def main_week_three(self):
         d = [self.peaking.generate_main(m) for m in self.peaking.main_lifts]
         w = [self.weight_calc.get_weights(lift)[2] for lift in ["squats", "bench", "deadlift"]]
@@ -84,6 +89,10 @@ class MonthlySchedule:
             x.insert(2, "weight", y)
             x["weight"] = [str(round(i,1)) if str(i)[-1] != "0" else str(round(i)) for i in x["weight"]]
             x["weight"] = [i + "kg" for i in x["weight"]]
+        return [MonthlySchedule.rename_main_lifts(df) for df in d]
+
+    def secondary_week_three(self):
+        d = [self.peaking.generate_secondary(m) for m in self.peaking.main_lifts]
         return [MonthlySchedule.rename_main_lifts(df) for df in d]
     
     def acc_week_one(self):
