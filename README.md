@@ -4,15 +4,10 @@ My own personal Shiny application for keeping track of my workout schedule.
 
 -----
 
-**Table of Contents**
-
-- [Installation](#installation)
-- [License](#license)
-
-## Installation
+## Run the app
 
 ```console
-...
+shiny run gym_calculation/app.py --reload
 ```
 
 ## License

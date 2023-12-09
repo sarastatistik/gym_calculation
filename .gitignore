@@ -1,5 +1,4 @@
 .vscode/
-dist/
 *.csv
 *__pycache__*
 env/
