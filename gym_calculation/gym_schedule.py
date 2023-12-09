@@ -10,7 +10,9 @@ class GymSchedule:
 
     def __init__(self,
                  main_set_reps: Optional[int] = None,
-                 accessory_set_reps: Optional[int] = None) -> None:
+                 accessory_set_reps: Optional[int] = None,
+                 warmup_sets: int = 3,
+                 warmup_sets_acc: int = 2) -> None:
 
         self.main_lifts = ["squats", "bench", "deadlift"]
 
@@ -22,7 +24,7 @@ class GymSchedule:
 
         if main_set_reps is not None:
             self.sets_main = GymSchedule.generate_sets(
-                warmup_sets=4,
+                warmup_sets=warmup_sets,
                 working_sets=3,
                 ending_reps=1,
                 max_reps=main_set_reps)
@@ -31,7 +33,7 @@ class GymSchedule:
 
         if accessory_set_reps is not None:
             self.sets_accessory = GymSchedule.generate_sets(
-                warmup_sets=2,
+                warmup_sets=warmup_sets_acc,
                 working_sets=3,
                 ending_reps=1,
                 max_reps=accessory_set_reps)
@@ -44,10 +46,7 @@ class GymSchedule:
                       ending_reps: int,
                       max_reps: int,
                       starting_with_bar: bool = True) -> Union[str, List[str]]:
-        if starting_with_bar:
-            sets = ["1x5"]
-        else:
-            sets = []
+        sets = ["1x5"] if starting_with_bar else []
         sets += [f"1x{j}" for i, j in zip(range(warmup_sets),
                                 np.linspace(4, ending_reps, warmup_sets, dtype=int))]
         sets += [f"{working_sets}x{max_reps}"]
