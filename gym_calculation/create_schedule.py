@@ -43,7 +43,7 @@ class MonthlySchedule:
     
     def _setup_df(self, df: pd.DataFrame):
         df.loc[df["lift"] == "squats", "lift"] = "Squats"
-        df.loc[df["lift"] == "bench", "lift"] = "Bench Press"
+        df.loc[df["lift"] == "bench", "lift"] = "Bench"
         df.loc[df["lift"] == "deadlift", "lift"] = "Deadlift"
         return df
     
